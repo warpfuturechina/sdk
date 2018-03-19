@@ -48,7 +48,7 @@ UERG SDK使用方法
 * SDK初始化
 
     ```
-    WFUerg.regist("Your App id");
+    WFUerg.register("Your App id");
     ```
 
     初始化时将会进行网络访问，所以必须在线程中调用。例如：
@@ -89,14 +89,14 @@ UERG SDK使用方法
 
     开发者根据业务需求需要重置SDK状态时，调用改接口可以重置SDK。
    ```java
-    WFUerg.reset();
+    WFUerg.reset(false);
     ```
 
     重置SDK时将会进行网络访问，所以必须在线程中调用。例如：
     ```java
     doAsync {
         try {
-            WFUerg.reset();
+            WFUerg.reset(false);
         }catch (e: UergException){
             uiThread{
                 toast(e.message.toString());
@@ -109,14 +109,14 @@ UERG SDK使用方法
 
     开发者在初始化SDK后，根据业务需求需要切换场景是调用。调用改接口时，可以传入参数控制是否开启一个新的场景。
     ```java
-    WFUerg.reload(false);
+    WFUerg.reload("Your App id");
     ```
 
     SDK重新加载时将会进行网络访问，所以必须在线程中调用。例如：
     ```java
     doAsync {
         try {
-            WFUerg.reload(false);
+            WFUerg.reload("Your App id");
         }catch (e: UergException){
             uiThread{
                 toast(e.message.toString());
