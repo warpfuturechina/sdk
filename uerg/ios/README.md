@@ -36,7 +36,7 @@ UERG SDK 文件说明
 UERG环境配置
 ----
 
-* 添加`libUERG.a`静态库引用路径，如: `$(PROJECT_DIR)/UERG_DEMO/UERG`，其中`./xxx/UERG`即`libUERG.a`所在路径
+* 添加`libUERG.a`静态库引用路径，`TARGETS -> Build Settings -> Library Search Paths`，添加配置：`$(PROJECT_DIR)/UERG_DEMO/UERG`，其中 `$(PROJECT_DIR)/xxx/UERG`即`libUERG.a`所在路径
 
 ![静态库引用路径](https://raw.githubusercontent.com/warpfuturechina/sdk/master/uerg/ios/IMG/library_search_paths.png)
 
@@ -64,7 +64,7 @@ UERG环境配置
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication \*)application didFinishLaunchingWithOptions:(NSDictionary \*)launchOptions {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     [[UERG shareInstance] registerWithAppId:@"your appId" delegate:self];
 
@@ -73,11 +73,11 @@ UERG环境配置
 
 #pragma mark - UERG delegate
 
-- (void)didRegisteredFinishing:(NSInteger)code message:(NSString \*)message {
+- (void)didRegisteredFinishing:(NSInteger)code message:(NSString *)message {
     NSLog(@"UERG: register/reload callback: %ld %@", code, message ?: @"");
 }
 
-- (void)didReceivedError:(NSInteger)errorCode message:(NSString \*)message {
+- (void)didReceivedError:(NSInteger)errorCode message:(NSString *)message {
     NSLog(@"UERG: Error callback: %ld %@", errorCode, message);
 }
 
