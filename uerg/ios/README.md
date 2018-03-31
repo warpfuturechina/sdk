@@ -1,0 +1,79 @@
+
+UERG项目简介
+--------
+UERG(User Entity Risk Guard) SDK 是曲速未来人工智能技术（广州）有限公司推出的一套信息安全产品。
+
+开发者可以根据需求采集用户信息，交由后台进行数据分析。判断当前用户是否是有效用户。
+
+
+系统要求
+----
+
+* iOS8.0 及 以上
+
+
+UERG SDK 文件说明
+----
+
+* `libUERG.a`
+* `UERG.bundle`
+* `UERG.h`、`UERGHeader.h`、`route.h`、`if_arp.h`、`if_dl.h`、`if_ether.h`、`if_types.h`、`route.h`
+
+* Note: `UERG.bundle`包含`UERG`所依赖的`js`文件，`UERG`加载依赖`js`前会对`js`文件进行哈希校验，校验文件是否有被修改，一旦被修改可能会导致`UERG`加载失败，因此，在获得`SDK`之后切记不要对`UERG.bundle`中的文件做任何修改。
+
+
+
+集成UERG
+----
+
+* 下载`UERG`后解压压缩文件，得到文件夹:`UERG`，文件夹下包含所有文件。
+* 将`SDK`所依赖的全部文件含`UERG`文件夹拖到工程中，注意勾选：`Copy items if needed` 和 `Add to targets`。
+
+
+UERG环境配置
+----
+
+* 添加`libUERG.a`静态库引用路径，如: `$(PROJECT_DIR)/UERG_DEMO/UERG`，其中`./xxx/UERG`即`libUERG.a`所在路径
+* 添加`Category`文件引用配置：` Other Linker Flags -> -ObjC`。
+* 添加`UERG`动态库依赖：`TARGETS -> Build Phases -> Link Binary With Libraries -> rebresolv.tbd`
+* IDFA标识符：</br>如果您的项目已经使用了获取广告标识符API，请忽略并跳过以下内容。</br>如`UERG项目简介`中所描述，`UERG`用于进行人机识别，获取IDFA标识符能够提高人机识别速度及准确率，若您的项目之前未使用过获取IDFA标识符API，并决定授权`UERG`使用IDFA标识符，请按如下操作：</br>`TARGETS -> Build Phases` -> `Link Binary With Libraries` 添加 `AdSupport.framework`</br>将应用提交至`AppStore`时按如下方式配置：避免审核时被苹果以“应用不含广告功能，但获取了广告标识符IDFA”而拒绝上架。
+[img:]
+
+
+快速开始（QUICK START）
+----
+
+推荐在`- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;`中注册并启动`SDK`。
+
+```objc
+#import "UERG.h"
+
+@interface AppDelegate ()<UERGDelegate>
+
+@end
+
+@implementation AppDelegate
+
+- (BOOL)application:(UIApplication \*)application didFinishLaunchingWithOptions:(NSDictionary \*)launchOptions {
+
+    [[UERG shareInstance] registerWithAppId:@"your appId" delegate:self];
+
+    return YES;
+}
+
+#pragma mark - UERG delegate
+
+- (void)didRegisteredFinishing:(NSInteger)code message:(NSString \*)message {
+    NSLog(@"UERG: register/reload callback: %ld %@", code, message ?: @"");
+}
+
+- (void)didReceivedError:(NSInteger)errorCode message:(NSString \*)message {
+    NSLog(@"UERG: Error callback: %ld %@", errorCode, message);
+}
+
+- (void)didReceivedStatusChangeCallback:(NSInteger)code {
+    NSLog(@"UERG: status change callback: %ld", code);
+}
+
+@end
+```
