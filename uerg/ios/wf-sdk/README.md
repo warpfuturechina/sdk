@@ -45,7 +45,7 @@ WFSDK 文件说明
 
 ![目录结构](https://raw.githubusercontent.com/warpfuturechina/sdk/master/uerg/ios/wf-sdk/IMG/files.png)
 
-UERG环境配置
+环境配置
 ----
 
 * 添加`libWFSDK.a`静态库引用路径，`TARGETS -> Build Settings -> Library Search Paths`，添加配置：`$(PROJECT_DIR)/WFSDKDemo/WFSDK`，其中 `$(PROJECT_DIR)/xxx/WFSDK`即`libWFSDK.a`所在路径
@@ -65,7 +65,9 @@ UERG环境配置
 快速集成
 ----
 
-推荐在应用启动入口:`- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;`中注册`SDK`。
+注册SDK
+
+推荐在应用启动入口中注册`SDK`。
 
 ```objc
 #import "WFSDK.h"
@@ -95,8 +97,6 @@ UERG环境配置
 UERG 集成风险识别组件
 ----
 
-确保`SDK`注册成功之后，启用`UERG`
-
 ```objc
 
 #import "WFSDK.h"
@@ -109,7 +109,7 @@ UERG 集成风险识别组件
 @implementation UERGTest
 
 - (void)startUerg {
-    // 开启UERG
+    // 确保SDK已经注册成功，开启UERG
     [WFSDK start:WFSDKProductTypeUERG delegate:self];
 }
 
@@ -145,6 +145,7 @@ DVID 集成设备指纹
 @implementation DVIDTest
 
 - (void)startDVID {
+    // 确保SDK已经注册成功，启用设备指纹
     [WFSDK start:WFSDKProductTypeDVID delegate:self];
 }
 
@@ -179,7 +180,9 @@ DVID 集成设备指纹
 KLCA 集成知识图谱验证码
 ----
 
-##### 集成方式一
+知识图谱验证码的使用包含两种方式，可以根据需要选择其中一种方式接入即可。
+
+##### 知识图谱验证码第一种使用方式
 
 ```objc
 
@@ -193,7 +196,7 @@ KLCA 集成知识图谱验证码
 @implementation KLCAViewController
 
 - (void)start {
-    // 步骤一：确保注册成功之后再启动
+    // 步骤一：确保已经注册成功，启用知识图谱验证码
     [WFSDK start:WFSDKProductTypeKLCA delegate:self];
 }
 
@@ -246,7 +249,7 @@ KLCA 集成知识图谱验证码
 
 ```
 
-##### 集成方式二
+##### 知识图谱验证码第二 种使用方式
 
 便捷方式
 
@@ -297,6 +300,5 @@ KLCA 集成知识图谱验证码
         NSLog(@"验证失败 回调信息:%@",message);
     }
 }
-
 
 ```
