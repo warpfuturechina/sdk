@@ -94,6 +94,75 @@ WFSDK 文件说明
 @end
 ```
 
+WFSDK 生命周期控制示例
+----
+
+#### 暂停SDK
+
+暂停SDK，SDK将停止运行
+
+```objc
+
+- (void)pauseSDK {
+    [WFSDK pause:self];
+}
+
+- (void)pauseCallback:(NSInteger)code message:(id)message {
+    NSLog(@"pause:%@",message);
+    NSLog(@"code:%ld",code);
+}
+
+```
+
+#### 恢复SDK
+
+与pause方法配套使用，pause调用若想恢复SDK的运行，调用该方法
+
+```objc
+
+- (void)resumeSDK {
+    [WFSDK resume:self];
+}
+
+- (void)resumeCallback:(NSInteger)code message:(id)message {
+    NSLog(@"resume:%@",message);
+    NSLog(@"code:%ld",code);
+}
+
+```
+
+#### 重启SDK
+
+SDK将使用上一次注册成功的配置重新启动并工作
+
+```objc
+
+- (void)resetSDK {
+   [WFSDK reset:self];
+}
+
+- (void)resetCallback:(NSInteger)code message:(id)message {
+    NSLog(@"reset:%@",message);
+    NSLog(@"code:%ld",code);
+}
+
+```
+
+#### 销毁SDK
+
+SDK一旦销毁，需要重新注册SDK才能使用
+
+```objc
+- (void)destorySDK {
+    [WFSDK destory:self];
+}
+
+- (void)destoryCallback:(NSInteger)code message:(id)message {
+    NSLog(@"destory:%@",message);
+    NSLog(@"code:%ld",code);
+}
+
+```
 UERG 集成风险识别组件
 ----
 
