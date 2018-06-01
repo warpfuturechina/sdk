@@ -1,7 +1,7 @@
 
-UERG项目简介
+WFSDK项目简介
 --------
-WFSDK(Warpfuture SDK)是曲速未来人工智能技术（广州）有限公司推出的一套信息安全产品，开发者可以根据业务需求启用不同的产品。
+WFSDK(Warpfuture SDK)是曲速未来人工智能技术（广州）有限公司推出的一套信息安全产品，开发者可以根据安全方面的需求使用不同的产品。
 
 * WFSDK: 曲速未来SDK简称
 * UERG: 风险识别组件
@@ -11,7 +11,7 @@ WFSDK(Warpfuture SDK)是曲速未来人工智能技术（广州）有限公司�
 系统要求
 ----
 
-* iOS8.0 及 以上
+* iOS8.0 或 以上
 
 
 WFSDK 文件说明
@@ -31,9 +31,9 @@ WFSDK 文件说明
 * `route.h`
 * `WFSDK.bundle`
 
-* Note: `WFSDK.bundle`包含`WFSDK`所依赖的`js`文件，`WFSDK`加载依赖`js`前会对`js`文件进行哈希校验，校验文件是否有被修改，一旦被修改可能会导致`WFSDK`加载失败，因此，在获得`SDK`之后切记不要对`WFSDK.bundle`中的文件做任何修改。
+* 注意: `WFSDK.bundle`包含`WFSDK`依赖的所有`js`文件，`WFSDK`加载`js`前会对`js`文件进行哈希校验，校验文件是否有被修改，一旦被修改可能会导致`WFSDK`加载失败，因此，在获得`SDK`之后切记不要对`WFSDK.bundle`中的文件做任何修改。
 
-![文件](https://raw.githubusercontent.com/warpfuturechina/sdk/master/uerg/ios/wf-sdk/IMG/file.png)
+![文件](IMG/file.png)
 
 集成WFSDK
 ----
@@ -41,31 +41,35 @@ WFSDK 文件说明
 * 下载`WFSDK`后解压压缩文件，得到文件夹:`WFSDK`，文件夹下包含所有文件。
 * 将`SDK`所依赖的全部文件含`WFSDK`文件夹拖到工程中，注意勾选：`Copy items if needed` 和 `Add to targets`。
 
-![集成](https://raw.githubusercontent.com/warpfuturechina/sdk/master/uerg/ios/wf-sdk/IMG/integration.png)
+![集成](IMG/integration.png)
 
-![目录结构](https://raw.githubusercontent.com/warpfuturechina/sdk/master/uerg/ios/wf-sdk/IMG/files.png)
+![目录结构](IMG/files.png)
 
 环境配置
 ----
 
 * 添加`libWFSDK.a`静态库引用路径，`TARGETS -> Build Settings -> Library Search Paths`，添加配置：`$(PROJECT_DIR)/WFSDKDemo/WFSDK`，其中 `$(PROJECT_DIR)/xxx/WFSDK`即`libWFSDK.a`所在路径
 
-![静态库引用路径](https://raw.githubusercontent.com/warpfuturechina/sdk/master/uerg/ios/wf-sdk/IMG/library_search_paths.png)
+![静态库引用路径](IMG/library_search_paths.png)
 
 * 添加`Category`文件配置：` Other Linker Flags -> -ObjC`。
 
-![Category](https://raw.githubusercontent.com/warpfuturechina/sdk/master/uerg/ios/wf-sdk/IMG/category.png)
+![Category](IMG/category.png)
 
 * 添加`WFSDK`动态库依赖：`TARGETS -> Build Phases -> Link Binary With Libraries -> rebresolv.tbd`
 * IDFA标识符：</br>如果您的项目已经使用了获取广告标识符API，请忽略并跳过以下内容。</br>如`WFSDK项目简介`中所描述，`UERG`用于进行人机识别，获取IDFA标识符能够提高人机识别速度及准确率，若您的项目之前未使用过获取IDFA标识符API，并决定授权`UERG`使用IDFA标识符，请按如下操作：</br>`TARGETS -> Build Phases` -> `Link Binary With Libraries` 添加 `AdSupport.framework`</br>将应用提交至`AppStore`时按如下方式配置：避免审核时被苹果以“应用不含广告功能，但获取了广告标识符IDFA”而拒绝上架。
 
-![idfa](https://raw.githubusercontent.com/warpfuturechina/sdk/master/uerg/ios/wf-sdk/IMG/idfa.png)
+![idfa](IMG/idfa.png)
 
 
 快速集成
 ----
 
 注册SDK
+
+`+ (void)registerWithAppId:(NSString *)appId delegate:(id<WFSDKDelegate>)delegate;`
+
+`- (void)registerCallback:(NSInteger)code message:(id)message;`
 
 推荐在应用启动入口中注册`SDK`。
 
@@ -80,6 +84,7 @@ WFSDK 文件说明
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
+    // 注册App
     [WFSDK registerWithAppId:@"your appId" delegate:self];
 
     return YES;
@@ -99,6 +104,10 @@ WFSDK 生命周期控制示例
 
 #### 暂停SDK
 
+`+ (void)pause:(id<WFSDKDelegate>)delegate;`
+
+`- (void)pauseCallback:(NSInteger)code message:(id)message;`
+
 暂停SDK，SDK将停止运行
 
 ```objc
@@ -106,6 +115,8 @@ WFSDK 生命周期控制示例
 - (void)pauseSDK {
     [WFSDK pause:self];
 }
+
+#pragma mark - WFSDKDelegate
 
 - (void)pauseCallback:(NSInteger)code message:(id)message {
     NSLog(@"pause:%@",message);
@@ -116,6 +127,10 @@ WFSDK 生命周期控制示例
 
 #### 恢复SDK
 
+`+ (void)resume:(id<WFSDKDelegate>)delegate;`
+
+`- (void)resumeCallback:(NSInteger)code message:(id)message;`
+
 与pause方法配套使用，pause调用若想恢复SDK的运行，调用该方法
 
 ```objc
@@ -123,6 +138,8 @@ WFSDK 生命周期控制示例
 - (void)resumeSDK {
     [WFSDK resume:self];
 }
+
+#pragma mark - WFSDKDelegate
 
 - (void)resumeCallback:(NSInteger)code message:(id)message {
     NSLog(@"resume:%@",message);
@@ -133,13 +150,19 @@ WFSDK 生命周期控制示例
 
 #### 重启SDK
 
-SDK将使用上一次注册成功的配置重新启动并工作
+`+ (void)reset:(id<WFSDKDelegate>)delegate;`
+
+`- (void)resetCallback:(NSInteger)code message:(id)message;`
+
+SDK将使用上一次注册成功的配置重新启动并运行
 
 ```objc
 
 - (void)resetSDK {
    [WFSDK reset:self];
 }
+
+#pragma mark - WFSDKDelegate
 
 - (void)resetCallback:(NSInteger)code message:(id)message {
     NSLog(@"reset:%@",message);
@@ -150,12 +173,18 @@ SDK将使用上一次注册成功的配置重新启动并工作
 
 #### 销毁SDK
 
+`+ (void)destory:(id<WFSDKDelegate>)delegate;`
+
+`- (void)destoryCallback:(NSInteger)code message:(id)message;`
+
 SDK一旦销毁，需要重新注册SDK才能使用
 
 ```objc
 - (void)destorySDK {
     [WFSDK destory:self];
 }
+
+#pragma mark - WFSDKDelegate
 
 - (void)destoryCallback:(NSInteger)code message:(id)message {
     NSLog(@"destory:%@",message);
@@ -178,11 +207,17 @@ UERG 集成风险识别组件
 @implementation UERGTest
 
 - (void)startUerg {
-    // 确保SDK已经注册成功，开启UERG
+    // 启动风控组件包含两种方式，请确保App注册成功之后再启动
+
+    // 方式一
     [WFSDK start:WFSDKProductTypeUERG delegate:self];
+
+    // 方式二
+    // [UERG start:self];
 }
 
-- (void)uergGegPackage {
+- (void)gegPackage {
+    // 获取UERG数据包
     NSLog(@"package: %@", [UERG getPackage]);
 }
 
@@ -201,11 +236,12 @@ UERG 集成风险识别组件
 DVID 集成设备指纹
 ----
 
+`` 或 ``
+
 ```objc
 
 #import "WFSDK.h"
 #import "DVID.h"
-
 
 @interface DVIDTest ()<DVIDDelegate>
 
@@ -214,28 +250,41 @@ DVID 集成设备指纹
 @implementation DVIDTest
 
 - (void)startDVID {
-    // 确保SDK已经注册成功，启用设备指纹
+    // 启动设备指纹包含两种方式，请确保App注册成功之后再启动
+
+    // 方式一
     [WFSDK start:WFSDKProductTypeDVID delegate:self];
+
+    // 方式二
+    // [DVID start:self];
 }
 
 - (void)getDviceId {
+    // 获取设备指纹
     [DVID get:self];
 }
 
 - (void)checkDviceId {
-    [DVID  check:self extra:nil];
+    // 1. 验证当前设备的指纹是否存在风险，不带拓展信息
+    [DVID check:self extra:nil];
+
+    // 2. 验证当前设备的指纹是否存在风险，携带拓展信息
+    [DVID check:self extra:@{@"email":@"your email"}];
 }
 
 #pragma mark - DVIDDelegate
 
+// 启动回调
 - (void)startDeviceIdCallback:(NSInteger)code message:(id)message {
      NSLog(@"DVID 回调码:%ld 回调信息:%@",code,message);
 }
 
+// 获取设备指纹回调
 - (void)getDeviceIdCallback:(NSString *)deviceId message:(id)message {
     NSLog(@"指纹:%@ 回调信息:%@", deviceId, message);
 }
 
+// 验证结果回调
 - (void)checkDeviceIdCallback:(id)data message:(id)message {
     // risk: 0,没有风险; 1,有风险
     // grade: 风险等级, 1~10, 越大风险越高
@@ -251,7 +300,7 @@ KLCA 集成知识图谱验证码
 
 知识图谱验证码的使用包含两种方式，可以根据需要选择其中一种方式接入即可。
 
-##### 知识图谱验证码第一种使用方式
+##### 知识图谱验证码第一种接入方式
 
 ```objc
 
@@ -265,8 +314,13 @@ KLCA 集成知识图谱验证码
 @implementation KLCAViewController
 
 - (void)start {
-    // 步骤一：确保已经注册成功，启用知识图谱验证码
+    // 步骤一：启动知识图谱包含两种方式，请确保在App注册成功之后再启动
+
+    // 方式一：WFSDK类方法
     [WFSDK start:WFSDKProductTypeKLCA delegate:self];
+
+    // 方式二：UERG类方法
+    // [KLCA start:self];
 }
 
 - (void)get {
@@ -281,10 +335,12 @@ KLCA 集成知识图谱验证码
 
 #pragma mark - KLCADelegate
 
+// 启动回调
 - (void)startCaptchaCallback:(NSInteger)code message:(id)message  {
     NSLog(@"KLCA 回调码:%ld message:%@",code,message);
 }
 
+// 获取验证码回调
 - (void)getCaptchaCallback:(UIView *)captchaView message:(id)message {
     if (captchaView) {
         NSLog(@"获取验证码成功:%@",message);
@@ -307,6 +363,7 @@ KLCA 集成知识图谱验证码
     }
 }
 
+// 校验回调
 - (void)checkCaptchaCallback:(NSString *)token message:(id)message {
     if (token) {
         // 将token传给您的后端服务器，服务器再调用曲速验证接口进行最终的校验
@@ -318,7 +375,7 @@ KLCA 集成知识图谱验证码
 
 ```
 
-##### 知识图谱验证码第二 种使用方式
+##### 知识图谱验证码第二种接入方式
 
 便捷方式
 
@@ -330,15 +387,18 @@ KLCA 集成知识图谱验证码
 @end
 
 - (void)setup {
+    // 注册并启动知识图谱及获取验证码
     [KLCA startup:@"your appId" delegate:self];
 }
 
 - (void)check {
+    // 验证结果，用户点击注册或登录按钮时调用
     [KLCA check:self];
 }
 
 #pragma mark - KLCADelegate
 
+// 获取验证码回调
 - (void)startupCaptchaCallback:(UIView *)captchaView message:(id)message {
     if (captchaView) {
         NSLog(@"获取验证码成功:%@",message);
@@ -361,6 +421,7 @@ KLCA 集成知识图谱验证码
     }
 }
 
+// 验证结果回调
 - (void)checkCaptchaCallback:(NSString *)token message:(id)message {
     if (token) {
         // 将token传给您的后端服务器，服务器再调用曲速验证接口进行最终的校验
