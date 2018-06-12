@@ -365,6 +365,7 @@ KLCA 集成知识图谱验证码
 
 // 校验回调
 - (void)checkCaptchaCallback:(NSString *)token message:(id)message {
+    // 注意：不管验证通过还是失败，若需要重新验证需要重新调用获取验证码的方法（此时SDK内部对验证码视图组件的引用可能被释放调用，用户点击刷新按钮不能保证刷新成功）
     if (token) {
         // 将token传给您的后端服务器，服务器再调用曲速验证接口进行最终的校验
         NSLog(@"验证成功 token:%@ message:%@",token,message);
@@ -423,6 +424,7 @@ KLCA 集成知识图谱验证码
 
 // 验证结果回调
 - (void)checkCaptchaCallback:(NSString *)token message:(id)message {
+    // 注意：不管验证通过还是失败，若需要重新验证需要重新调用获取验证码的方法（此时SDK内部对验证码视图组件的引用可能被释放调用，用户点击刷新按钮不能保证刷新成功）
     if (token) {
         // 将token传给您的后端服务器，服务器再调用曲速验证接口进行最终的校验
         NSLog(@"验证成功 token:%@ 回调信息:%@",token,message);
