@@ -236,8 +236,6 @@ UERG 集成风险识别组件
 DVID 集成设备指纹
 ----
 
-`` 或 ``
-
 ```objc
 
 #import "WFSDK.h"
