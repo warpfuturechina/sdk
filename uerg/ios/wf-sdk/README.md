@@ -6,7 +6,7 @@ WFSDK(Warpfuture SDK)是曲速未来人工智能技术（广州）有限公司�
 * WFSDK: 曲速未来SDK简称
 * UERG: 风险识别组件
 * DVID: 设备指纹组件
-* KLCA: 知识图谱验证码组件
+* SDKG: 知识图谱验证码组件
 
 系统要求
 ----
@@ -21,7 +21,7 @@ WFSDK 文件说明
 * `WFSDK.h`
 * `UERG.h`
 * `DVID.h`
-* `KLCA.h`
+* `SDKG.h`
 * `WFHeader.h`
 * `route.h`
 * `if_arp.h`
@@ -293,7 +293,7 @@ DVID 集成设备指纹
 
 ```
 
-KLCA 集成知识图谱验证码
+SDKG 集成知识图谱验证码
 ----
 
 知识图谱验证码的使用包含两种方式，可以根据需要选择其中一种方式接入即可。
@@ -303,39 +303,39 @@ KLCA 集成知识图谱验证码
 ```objc
 
 #import "WFSDK.h"
-#import "KLCA.h"
+#import "SDKG.h"
 
-@interface KLCAViewController ()<KLCADelegate>
+@interface SDKGViewController ()<SDKGDelegate>
 @property (nonatomic, strong) UIView *vcodeView;
 @end
 
-@implementation KLCAViewController
+@implementation SDKGViewController
 
 - (void)start {
     // 步骤一：启动知识图谱包含两种方式，请确保在App注册成功之后再启动
 
     // 方式一：WFSDK类方法
-    [WFSDK start:WFSDKProductTypeKLCA delegate:self];
+    [WFSDK start:WFSDKProductTypeSDKG delegate:self];
 
     // 方式二：UERG类方法
-    // [KLCA start:self];
+    // [SDKG start:self];
 }
 
 - (void)get {
     // 步骤二：获取验证码
-    [KLCA get:self];
+    [SDKG get:self];
 }
 
 - (void)check {
     // 步骤三：验证结果，用户点击注册或登录按钮时调用
-    [KLCA check:self];
+    [SDKG check:self];
 }
 
-#pragma mark - KLCADelegate
+#pragma mark - SDKGDelegate
 
 // 启动回调
 - (void)startCaptchaCallback:(NSInteger)code message:(id)message  {
-    NSLog(@"KLCA 回调码:%ld message:%@",code,message);
+    NSLog(@"SDKG 回调码:%ld message:%@",code,message);
 }
 
 // 获取验证码回调
@@ -379,23 +379,23 @@ KLCA 集成知识图谱验证码
 便捷方式
 
 ```objc
-#import "KLCA.h"
+#import "SDKG.h"
 
-@interface KLCAViewController ()<KLCADelegate>
+@interface SDKGViewController ()<SDKGDelegate>
 @property (nonatomic, strong) UIView *vcodeView;
 @end
 
 - (void)setup {
     // 注册并启动知识图谱及获取验证码
-    [KLCA startup:@"your appId" delegate:self];
+    [SDKG startup:@"your appId" delegate:self];
 }
 
 - (void)check {
     // 验证结果，用户点击注册或登录按钮时调用
-    [KLCA check:self];
+    [SDKG check:self];
 }
 
-#pragma mark - KLCADelegate
+#pragma mark - SDKGDelegate
 
 // 获取验证码回调
 - (void)startupCaptchaCallback:(UIView *)captchaView message:(id)message {
